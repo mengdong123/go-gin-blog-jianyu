@@ -2,7 +2,8 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
-	setting "go-gin-blog-jianyu/pkg"
+	"github.com/mengdong123/go-gin-blog-jianyu/pkg/setting"
+	"github.com/mengdong123/go-gin-blog-jianyu/routers/api/v1"
 )
 
 func InitRouter() *gin.Engine {
@@ -14,11 +15,14 @@ func InitRouter() *gin.Engine {
 
 	gin.SetMode(setting.RunMode)
 
-	r.GET("/test", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "test",
-		})
-	})
+	apiv1 := r.Group("/api/v1")
+	{
+		apiv1.GET("/tags", v1.GetTags)
+		apiv1.GET("/tag/:id", v1.GetTag)
+		apiv1.PUT("/tag/:id", v1.EditTag)
+		apiv1.DELETE("/tag/:id", v1.DeleteTag)
+		apiv1.POST("/tags", v1.AddTag)
+	}
 
 	return r
 }

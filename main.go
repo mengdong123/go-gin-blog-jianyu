@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	setting "go-gin-blog-jianyu/pkg"
-	"go-gin-blog-jianyu/routers"
+	"github.com/mengdong123/go-gin-blog-jianyu/pkg/setting"
+	"github.com/mengdong123/go-gin-blog-jianyu/routers"
 	"net/http"
 )
 

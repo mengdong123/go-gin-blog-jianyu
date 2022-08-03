@@ -3,7 +3,8 @@ package models
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	setting "go-gin-blog-jianyu/pkg"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/mengdong123/go-gin-blog-jianyu/pkg/setting"
 	"log"
 )
 

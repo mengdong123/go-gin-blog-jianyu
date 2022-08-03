@@ -97,7 +97,7 @@ func EditTag(c *gin.Context) {
 	// 4. 进行更新
 	if !valida.HasErrors() {
 		// 判斷id的標題是否存在
-		if models.ExistTagById(id) {
+		if models.ExistTagByID(id) {
 			// 封装要查询的数据
 			data := make(map[string]interface{})
 			data["id"] = id

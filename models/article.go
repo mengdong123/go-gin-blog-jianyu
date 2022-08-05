@@ -19,6 +19,14 @@ type Article struct {
 	State      int    `json:"state"`
 }
 
+// CleanAllArticle cron用到的定时任务清楚article的state不是0的数据
+func CleanAllArticle() bool {
+	// 注意硬删除要使用 Unscoped()，这是 GORM 的约定
+	db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Article{})
+
+	return true
+}
+
 func ExistArticleByID(id int) bool {
 	var article Article
 	db.Select("id").Where("id = ?", id).First(&article)

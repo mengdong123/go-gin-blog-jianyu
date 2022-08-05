@@ -15,6 +15,14 @@ type Tag struct {
 	State      int    `json:"state"`
 }
 
+// CleanAllTag cron用到的定时任务清楚tag的state不是0的数据
+func CleanAllTag() bool {
+	// 注意硬删除要使用 Unscoped()，这是 GORM 的约定
+	db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{})
+
+	return true
+}
+
 // DeleteTagById 根据id删除tag
 func DeleteTagById(id int) bool {
 	db.Where("id = ?", id).Delete(&Tag{})

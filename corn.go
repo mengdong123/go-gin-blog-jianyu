@@ -1,3 +1,6 @@
+//go:build igonre
+// +build igonre
+
 package main
 
 import (

@@ -17,6 +17,7 @@ func AddArticle(c *gin.Context) {
 	tagId := com.StrTo(c.Query("tag_id")).MustInt()
 	title := c.Query("title")
 	desc := c.Query("desc")
+	coverImageUrl := c.Query("cover_image_url")
 	content := c.Query("content")
 	createdBy := c.Query("created_by")
 	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
@@ -25,6 +26,8 @@ func AddArticle(c *gin.Context) {
 	valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
 	valid.Required(title, "title").Message("标题不能为空")
 	valid.Required(desc, "desc").Message("简述不能为空")
+	valid.Required(desc, "cover_image_url").Message("图片不能为空")
+
 	valid.Required(content, "content").Message("内容不能为空")
 	valid.Required(createdBy, "created_by").Message("创建人不能为空")
 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
@@ -36,6 +39,7 @@ func AddArticle(c *gin.Context) {
 			data["tag_id"] = tagId
 			data["title"] = title
 			data["desc"] = desc
+			data["cover_image_url"] = coverImageUrl
 			data["content"] = content
 			data["created_by"] = createdBy
 			data["state"] = state
@@ -94,6 +98,7 @@ func EditArticle(c *gin.Context) {
 	tagId := com.StrTo(c.Query("tag_id")).MustInt()
 	title := c.Query("title")
 	desc := c.Query("desc")
+	coverImageUrl := c.Query("cover_image_url")
 	content := c.Query("content")
 	modifiedBy := c.Query("modified_by")
 
@@ -106,6 +111,7 @@ func EditArticle(c *gin.Context) {
 	valid.Min(id, 1, "id").Message("ID必须大于0")
 	valid.MaxSize(title, 100, "title").Message("标题最长为100字符")
 	valid.MaxSize(desc, 255, "desc").Message("简述最长为255字符")
+	valid.MaxSize(coverImageUrl, 255, "desc").Message("图片名称最长为255字符")
 	valid.MaxSize(content, 65535, "content").Message("内容最长为65535字符")
 	valid.Required(modifiedBy, "modified_by").Message("修改人不能为空")
 	valid.MaxSize(modifiedBy, 100, "modified_by").Message("修改人最长为100字符")
@@ -123,6 +129,9 @@ func EditArticle(c *gin.Context) {
 				}
 				if desc != "" {
 					data["desc"] = desc
+				}
+				if coverImageUrl != "" {
+					data["cover_image_url"] = coverImageUrl
 				}
 				if content != "" {
 					data["content"] = content
@@ -206,7 +215,7 @@ func GetArticles(c *gin.Context) {
 	if !valid.HasErrors() {
 		code = e.SUCCESS
 
-		data["lists"] = models.GetArticles(util.GetPage(c), setting.PageSize, maps)
+		data["lists"] = models.GetArticles(util.GetPage(c), setting.AppSetting.PageSize, maps)
 		data["total"] = models.GetArticleTotal(maps)
 
 	} else {

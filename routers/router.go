@@ -4,8 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mengdong123/go-gin-blog-jianyu/middleware/jwt"
 	"github.com/mengdong123/go-gin-blog-jianyu/pkg/setting"
+	"github.com/mengdong123/go-gin-blog-jianyu/pkg/upload"
 	"github.com/mengdong123/go-gin-blog-jianyu/routers/api"
 	"github.com/mengdong123/go-gin-blog-jianyu/routers/api/v1"
+	"net/http"
 )
 
 func InitRouter() *gin.Engine {
@@ -15,9 +17,12 @@ func InitRouter() *gin.Engine {
 
 	r.Use(gin.Recovery())
 
-	gin.SetMode(setting.RunMode)
+	gin.SetMode(setting.ServerSetting.RunMode)
+
+	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
 
 	r.GET("/auth", api.GetAuth)
+	r.POST("/upload", api.UploadImage)
 
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(jwt.JWT())
